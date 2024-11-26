@@ -1,72 +1,116 @@
 #include <stdio.h>
 #include <string.h>
 
-// Structure to represent an employee
+#define MAX_EMPLOYEES 100
+
 struct Employee {
     int id;
     char name[50];
-    char department[50];
-    char position[50];
+    char department[30];
+    char position[30];
     float salary;
 };
 
-// Function to add a new employee record
-void addEmployee(struct Employee employees[], int *count) {
-    printf("\n--- Add Employee ---\n");
-    struct Employee newEmployee;
+int main() {
+    struct Employee employees[MAX_EMPLOYEES];
+    int count = 0;
+    int choice;
 
-    printf("Enter employee ID: ");
-    scanf("%d", &newEmployee.id);
+    while (1) {
+        printf("\n*** StaffTrack System ***\n");
+        printf("1. Add Employee\n");
+        printf("2. Update Employee\n");
+        printf("3. Delete Employee\n");
+        printf("4. Show All Employees\n");
+        printf("5. Total Salary\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    printf("Enter employee name: ");
-    scanf(" %[^\n]", newEmployee.name);
+        if (choice == 1) {
+            if (count >= MAX_EMPLOYEES) {
+                printf("No space to add more employees!\n");
+            } else {
+                printf("Enter Employee ID: ");
+                scanf("%d", &employees[count].id);
+                printf("Enter Name: ");
+                scanf(" %[^\n]", employees[count].name);
+                printf("Enter Department: ");
+                scanf(" %[^\n]", employees[count].department);
+                printf("Enter Position: ");
+                scanf(" %[^\n]", employees[count].position);
+                printf("Enter Salary: ");
+                scanf("%f", &employees[count].salary);
 
-    printf("Enter department: ");
-    scanf(" %[^\n]", newEmployee.department);
-
-    printf("Enter position: ");
-    scanf(" %[^\n]", newEmployee.position);
-
-    printf("Enter salary: ");
-    scanf("%f", &newEmployee.salary);
-
-    employees[*count] = newEmployee;
-    (*count)++;
-    printf("Employee added successfully!\n");
-}
-
-// Function to update an existing employee record
-void updateEmployee(struct Employee employees[], int count) {
-    printf("\n--- Update Employee ---\n");
-    int id, found = 0;
-
-    printf("Enter employee ID to update: ");
-    scanf("%d", &id);
-
-    for (int i = 0; i < count; i++) {
-        if (employees[i].id == id) {
-            found = 1;
-            printf("Enter new employee name: ");
-            scanf(" %[^\n]", employees[i].name);
-
-            printf("Enter new department: ");
-            scanf(" %[^\n]", employees[i].department);
-
-            printf("Enter new position: ");
-            scanf(" %[^\n]", employees[i].position);
-
-            printf("Enter new salary: ");
-            scanf("%f", &employees[i].salary);
-            printf("Employee updated successfully!\n");
+                count++;
+                printf("Employee added!\n");
+            }
+        } else if (choice == 2) {
+            int id, i, found = 0;
+            printf("Enter Employee ID to update: ");
+            scanf("%d", &id);
+            for (i = 0; i < count; i++) {
+                if (employees[i].id == id) {
+                    found = 1;
+                    printf("Enter new Name: ");
+                    scanf(" %[^\n]", employees[i].name);
+                    printf("Enter new Department: ");
+                    scanf(" %[^\n]", employees[i].department);
+                    printf("Enter new Position: ");
+                    scanf(" %[^\n]", employees[i].position);
+                    printf("Enter new Salary: ");
+                    scanf("%f", &employees[i].salary);
+                    printf("Employee updated!\n");
+                    break;
+                }
+            }
+            if (!found) {
+                printf("Employee not found!\n");
+            }
+        } else if (choice == 3) {
+            int id, i, j, found = 0;
+            printf("Enter Employee ID to delete: ");
+            scanf("%d", &id);
+            for (i = 0; i < count; i++) {
+                if (employees[i].id == id) {
+                    found = 1;
+                    for (j = i; j < count - 1; j++) {
+                        employees[j] = employees[j + 1];
+                    }
+                    count--;
+                    printf("Employee deleted!\n");
+                    break;
+                }
+            }
+            if (!found) {
+                printf("Employee not found!\n");
+            }
+        } else if (choice == 4) {
+            int i;
+            if (count == 0) {
+                printf("No employees to show!\n");
+            } else {
+                printf("\nAll Employees:\n");
+                for (i = 0; i < count; i++) {
+                    printf("ID: %d, Name: %s, Department: %s, Position: %s, Salary: %.2f\n",
+                           employees[i].id, employees[i].name, employees[i].department,
+                           employees[i].position, employees[i].salary);
+                }
+            }
+        } else if (choice == 5) {
+            float totalSalary = 0;
+            int i;
+            for (i = 0; i < count; i++) {
+                totalSalary += employees[i].salary;
+            }
+            printf("Total salary of all employees is: %.2f\n", totalSalary);
+        } else if (choice == 6) {
+            printf("Exiting program.\n");
             break;
+        } else {
+            printf("Invalid choice. Try again!\n");
         }
     }
 
-    if (!found) {
-        printf("Employee with ID %d not found.\n", id);
-    }
+    return 0;
 }
-
-// Function to delete an employee record
-void deleteEmployee(struct Employee employees[], int *count) {
-    printf("\
